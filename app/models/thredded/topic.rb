@@ -15,6 +15,12 @@ module Thredded
 
     scope :order_sticky_first, -> { order(sticky: :desc) }
 
+    scope :followed_by, lambda { |user|
+      joins(:user_follows)
+        .where(thredded_user_topic_follows: { user_id: user.id })
+    }
+    scope :unread_followed_by, ->(user) { followed_by(user).unread(user) }
+
     extend FriendlyId
     friendly_id :slug_candidates,
                 use:            [:history, :reserved, :scoped],
@@ -44,6 +50,9 @@ module Thredded
              inverse_of:  :postable,
              dependent:   :destroy
     has_one :first_post, -> { order_oldest_first },
+            class_name:  'Thredded::Post',
+            foreign_key: :postable_id
+    has_one :last_post, -> { order_newest_first },
             class_name:  'Thredded::Post',
             foreign_key: :postable_id
 

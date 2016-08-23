@@ -6,6 +6,7 @@ Thredded::Engine.routes.draw do
   page_constraint = { page: positive_int }
 
   scope path: 'private-topics' do
+    resource :read_state, only: [:update], as: :mark_all_private_topics_read
     resource :private_topic, only: [:new], path: ''
     resources :private_topics, except: [:new, :show], path: '' do
       member do
@@ -42,7 +43,7 @@ Thredded::Engine.routes.draw do
     end
   end
 
-  resource :preferences, only: [:edit, :update]
+  resource :preferences, only: [:edit, :update], as: :global_preferences
   resource :messageboard, path: 'messageboards', only: [:new]
   resources :messageboards, only: [:edit, :update]
   resources :messageboards, only: [:index, :create], path: '' do

@@ -7,15 +7,36 @@ end
 
 require File.expand_path('../dummy/config/environment', __FILE__)
 
-# Re-create the test database and run the migrations
 db = ENV.fetch('DB', 'sqlite3')
+
+# Outside of travis, Rails log is logged to a file. On Travis, database queries are logged to STDERR.
+if ENV['TRAVIS']
+  Rails.logger = Logger.new(STDERR)
+  Rails.logger.level = Logger::WARN
+  ActiveRecord::Base.logger = Logger.new(STDERR)
+  ActiveRecord::Base.logger.level = Logger::DEBUG
+else
+  ActiveRecord::SchemaMigration.logger = ActiveRecord::Base.logger = Logger.new(File.open("log/test.#{db}.log", 'w'))
+end
+
+def silence_active_record
+  was = ActiveRecord::Base.logger.level
+  ActiveRecord::Base.logger.level = Logger::WARN
+  yield
+ensure
+  ActiveRecord::Base.logger.level = was
+end
+
+# Re-create the test database and run the migrations
 system({ 'DB' => db }, 'script/create-db-users') unless ENV['TRAVIS']
 ActiveRecord::Tasks::DatabaseTasks.drop_current
 ActiveRecord::Tasks::DatabaseTasks.create_current
 begin
   verbose_was = ActiveRecord::Migration.verbose
   ActiveRecord::Migration.verbose = false
-  ActiveRecord::Migrator.migrate(['db/migrate/', File.join(Rails.root, 'db/migrate/')])
+  silence_active_record do
+    ActiveRecord::Migrator.migrate(['db/migrate/', File.join(Rails.root, 'db/migrate/')])
+  end
 ensure
   ActiveRecord::Migration.verbose = verbose_was
 end
@@ -45,7 +66,6 @@ Dir[Rails.root.join('../../spec/support/**/*.rb')].each { |f| require f }
 counter = -1
 
 FileUtils.mkdir('log') unless File.directory?('log')
-ActiveRecord::SchemaMigration.logger = ActiveRecord::Base.logger = Logger.new(File.open("log/test.#{db}.log", 'w'))
 
 RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
@@ -54,7 +74,9 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
+    silence_active_record do
+      DatabaseCleaner.clean_with(:truncation)
+    end
     if Rails::VERSION::MAJOR < 5
       # after_commit testing is baked into rails 5.
       require 'test_after_commit'

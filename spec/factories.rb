@@ -65,6 +65,7 @@ FactoryGirl.define do
   factory :topic, class: Thredded::Topic do
     transient do
       with_posts 0
+      post_interval 1.hour
       with_categories 0
     end
 
@@ -77,8 +78,11 @@ FactoryGirl.define do
 
     after(:create) do |topic, evaluator|
       if evaluator.with_posts
+        ago = topic.updated_at - evaluator.with_posts * evaluator.post_interval
         evaluator.with_posts.times do
-          create(:post, postable: topic, user: topic.user, messageboard: topic.messageboard)
+          ago += evaluator.post_interval
+          create(:post, postable: topic, user: topic.user, messageboard: topic.messageboard, created_at: ago,
+                        updated_at: ago)
         end
 
         topic.posts_count = evaluator.with_posts
@@ -160,6 +164,7 @@ FactoryGirl.define do
     user
     association :postable, factory: :private_topic
     page 1
+    read_at { Time.now.utc }
   end
 
   factory :user_topic_follow, class: Thredded::UserTopicFollow do
