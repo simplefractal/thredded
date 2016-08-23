@@ -3,6 +3,8 @@ require_dependency 'thredded/topic_email_view'
 module Thredded
   class TopicMailer < Thredded::BaseMailer
     def topic_created(topic_id)
+      return if ENV['DISABLE_THREDDED_EMAILS']
+
       @topic                = find_record Topic, topic_id
       email_details        = TopicEmailView.new(@topic)
       headers['X-SMTPAPI'] = email_details.smtp_api_tag('post_notification')
@@ -16,6 +18,8 @@ module Thredded
     # Broadcast via email to all messageboard viewers that
     # this topic has been created
     def topic_created_broadcast(topic_id)
+      return if ENV['DISABLE_THREDDED_EMAILS']
+
       @topic                = find_record Topic, topic_id
       email_details        = TopicEmailView.new(@topic)
       headers['X-SMTPAPI'] = email_details.smtp_api_tag('post_notification')
