@@ -28,6 +28,7 @@ module Thredded
           end
         end
         update_without_timestamping!(post, moderation_state: moderation_state)
+        notify_poster_of_moderation_state(post)
         post_moderation_record
       end
     end
@@ -42,6 +43,10 @@ module Thredded
       ensure
         record.record_timestamps = record_timestamps_was
       end
+    end
+
+    def notify_poster_of_moderation_state(post)
+      PostMailer.post_moderated(post.id).deliver_now
     end
   end
 end

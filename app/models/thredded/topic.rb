@@ -5,6 +5,10 @@ module Thredded
     include TopicCommon
     include ContentModerationState
 
+    # attribute used when admins create a topic, to email
+    # all messageboard members.
+    attr_accessor :email_all_messageboard_members
+
     scope :for_messageboard, -> (messageboard) { where(messageboard_id: messageboard.id) }
 
     scope :stuck, -> { where(sticky: true) }
