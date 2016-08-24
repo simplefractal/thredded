@@ -3,7 +3,7 @@ module Thredded
   class TopicForm
     include ActiveModel::Model
 
-    attr_accessor :title, :category_ids, :locked, :sticky, :content, :topic, :email_all_messageboard_members
+    attr_accessor :title, :category_ids, :locked, :sticky, :content, :topic, :email_all_messageboard_members, :make_private
     attr_reader :user, :messageboard
 
     validate :validate_children
@@ -17,6 +17,7 @@ module Thredded
       @user = params[:user] || fail('user is required')
       @messageboard = params[:messageboard]
       @email_all_messageboard_members = (params[:email_all_messageboard_members] == "1")
+      @make_private = (params[:make_private] == "1")
     end
 
     def self.model_name
@@ -56,6 +57,7 @@ module Thredded
         user: non_null_user,
         last_user: non_null_user,
         categories: topic_categories,
+        moderation_state: topic_moderation_state
       )
     end
 
@@ -68,6 +70,16 @@ module Thredded
     end
 
     private
+
+    def topic_moderation_state
+      if make_private && user.thredded_admin?
+        :blocked
+      elsif user.thredded_admin?
+        :approved
+      else
+        :pending_moderation
+      end
+    end
 
     def email_admins_of_new_topic
       TopicMailer.topic_created(topic.id).deliver_now

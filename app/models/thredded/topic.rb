@@ -9,6 +9,9 @@ module Thredded
     # all messageboard members.
     attr_accessor :email_all_messageboard_members
 
+    # attribute used when admins create a topic, allow allow topic to be private
+    attr_accessor :make_private
+
     scope :for_messageboard, -> (messageboard) { where(messageboard_id: messageboard.id) }
 
     scope :stuck, -> { where(sticky: true) }

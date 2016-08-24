@@ -9,8 +9,13 @@
       <%= form.check_box :sticky %> Sticky
     <% end %>
 
+    <%= form.label :make_private do %>
+      <%= form.check_box :make_private %> Private
+    <% end %>
+
     <%= form.label :email_all_messageboard_members do %>
-      <%= form.check_box :email_all_messageboard_members %> email_all_messageboard_members
+      <%= form.check_box :email_all_messageboard_members %>
+      Email all Messageboard members
     <% end %>
   </li>
 <% end %>
