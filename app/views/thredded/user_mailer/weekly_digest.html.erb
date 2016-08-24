@@ -1,0 +1,41 @@
+<p>Hi <%= @user.name %></p>
+
+Here's a summary of what's changed on Wcai's discussion boards in the last <%= @digest_period_in_words %>.
+
+<% @messageboards.each do |messageboard| %>
+  <h5><% messageboard[:messageboard].name %></h5>
+  Board: <b><%= messageboard[:messageboard].name %></b>
+
+  <% if messageboard[:newly_created_topics].present? %>
+    <p>The following topics were created:</p>
+    <ul>
+      <% messageboard[:newly_created_topics].each do |topic| %>
+        <li><%= link_to topic.title, messageboard_topic_url(topic.messageboard, topic) %> </li>
+      <% end %>
+    </ul>
+
+    <h6></h6>
+  <% end %>
+
+  <% if messageboard[:newly_posted_to_topics].present? %>
+    <p>The following topics have been updated:</p>
+    <ul>
+      <% messageboard[:newly_posted_to_topics].each do |topic| %>
+        <li><%= link_to topic.title, messageboard_topic_url(topic.messageboard, topic) %> </li>
+
+      <ul>
+        <% topic.posts.where("created_at > ?", @digest_period_cutoff).each do |post| %>
+          <li><%= post.user.name %>: <%= truncate(post.content) %></li>
+        <% end %>
+      </ul>
+      <% end %>
+    </ul>
+
+    <h6></h6>
+  <% end %>
+<% end %>
+
+<p>
+  To unsubscribe from these emails, update your
+  <%= link_to 'preferences', edit_global_preferences_url %>.
+</p>
