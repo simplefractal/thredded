@@ -6,7 +6,6 @@ module Thredded
     end
 
     def run
-      return if targeted_users.empty?
       PostMailer.post_notification(@post.id, targeted_users.map(&:email)).deliver_now
       MembersMarkedNotified.new(@post, targeted_users).run
     end
