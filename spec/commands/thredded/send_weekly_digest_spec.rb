@@ -17,6 +17,20 @@ module Thredded
         expect { subject }.to_not change { ActionMailer::Base.deliveries.count }
       end
 
+      context "with an error raised for a user" do
+        let(:error_reporter) { double(:error_reporter, warning: nil) }
+        before do
+          allow(UserMailer).to receive(:weekly_digest).and_raise("Mail Error")
+
+          allow(Thredded).to receive(:error_reporter).and_return(error_reporter)
+        end
+
+        it "calls the error reporter and doesn't halt execution" do
+          subject
+          expect(error_reporter).to have_received(:warning)
+        end
+      end
+
       context "with new content" do
         let!(:old_topic) { create(:topic, user: user, created_at: 2.weeks.ago) }
         let!(:new_topic) { create(:topic, user: user, created_at: 1.day.ago)}

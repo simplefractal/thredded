@@ -58,6 +58,10 @@ module Thredded
   self.user_name_column = :name
   self.content_visible_while_pending_moderation = true
 
+  def self.error_reporter
+    Rollbar
+  end
+
   # @return [Class<Thredded::UserExtender>] the user class from the host application.
   def self.user_class
     fail 'Please use a string instead of a class' if @@user_class.is_a?(Class)
