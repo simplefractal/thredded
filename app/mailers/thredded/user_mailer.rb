@@ -17,7 +17,7 @@ module Thredded
       )
 
       mail from:     email_details.no_reply,
-           to:       email_details.no_reply,
+           to:       @user.email,
            subject:  email_details.subject
     end
 

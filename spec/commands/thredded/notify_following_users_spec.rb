@@ -23,6 +23,7 @@ module Thredded
 
     describe '#run' do
       let(:post) { create(:post) }
+      let!(:other_post) { create(:post, postable: post.postable) }
 
       let(:command) { NotifyFollowingUsers.new(post) }
       let(:targeted_users) { [build_stubbed(:user)] }

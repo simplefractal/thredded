@@ -22,7 +22,7 @@ module Thredded
 
           if moderation_state == :blocked
             post.postable.posts.where(user_id: post.user.id).where.not(id: post.id).each do |a_post|
-              a.post.skip_auto_follow_and_notify = true
+              a_post.skip_auto_follow_and_notify = true
               update_without_timestamping!(a_post, moderation_state: moderation_state)
             end
           end
