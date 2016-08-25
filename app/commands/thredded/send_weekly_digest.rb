@@ -15,7 +15,7 @@ module Thredded
 
     def users
       @users ||= begin
-        Thredded.user_class.includes(:thredded_user_preference).where(
+        Thredded.user_class.weekly_digest_base_users.includes(:thredded_user_preference).where(
           'thredded_user_preferences.send_weekly_digest' => [true, nil]
           ).all.reject do |user|
             user.thredded_user_preference.received_last_weekly_digest_recently?(resend_safety_time)

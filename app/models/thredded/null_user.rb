@@ -6,6 +6,7 @@ module Thredded
     include ::Thredded::UserPermissions::Message::ReadersOfWriteableBoards
     include ::Thredded::UserPermissions::Moderate::None
     include ::Thredded::UserPermissions::Admin::None
+    include ::Thredded::UserPermissions::Emails::WeeklyDigest
 
     def thredded_private_topics
       Thredded::PrivateTopic.none
