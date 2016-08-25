@@ -162,6 +162,8 @@ class CreateThredded < ActiveRecord::Migration
       t.boolean :notify_on_mention, default: true, null: false
       t.boolean :notify_on_message, default: true, null: false
       t.timestamps null: false
+      t.boolean :send_weekly_digest, default: true, null: false
+      t.datetime :last_weekly_digest_sent_at
       t.index [:user_id], name: :index_thredded_user_preferences_on_user_id
     end
 

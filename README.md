@@ -1,5 +1,11 @@
 # Thredded [![Code Climate](https://codeclimate.com/github/thredded/thredded/badges/gpa.svg)](https://codeclimate.com/github/thredded/thredded) [![Travis-CI](https://api.travis-ci.org/thredded/thredded.svg?branch=master)](https://travis-ci.org/thredded/thredded/) [![Test Coverage](https://codeclimate.com/github/thredded/thredded/badges/coverage.svg)](https://codeclimate.com/github/thredded/thredded/coverage) [![Gitter](https://badges.gitter.im/thredded/thredded.svg)](https://gitter.im/thredded/thredded?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Stories in Ready](https://badge.waffle.io/thredded/thredded.svg?label=ready&title=waffle.io)](http://waffle.io/thredded/thredded)
 
+### /Users/benjaminkies/Workspace/SimpleFractal
+
+Changes made for wcai
+ - Added columns to the preferences table:
+  cp /thredded/db/upgrade_migrations/20160825151050_add_weekly_digest_to_thredded_user_preferences.rb to your migrations and run it.
+
 _Thredded_ is a Rails 4.2+ forum/messageboard engine. Its goal is to be as simple and feature rich as possible.
 
 Some of the features currently in Thredded:

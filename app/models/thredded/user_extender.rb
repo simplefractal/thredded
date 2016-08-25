@@ -8,6 +8,7 @@ module Thredded
     include ::Thredded::UserPermissions::Message::ReadersOfWriteableBoards
     include ::Thredded::UserPermissions::Moderate::IfModeratorColumnTrue
     include ::Thredded::UserPermissions::Admin::IfAdminColumnTrue
+    include ::Thredded::UserPermissions::Emails::WeeklyDigest
 
     included do
       with_options dependent: :nullify, foreign_key: 'user_id', inverse_of: :user do |opt|
