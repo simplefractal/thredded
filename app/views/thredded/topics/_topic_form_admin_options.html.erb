@@ -19,3 +19,24 @@
     <% end %>
   </li>
 <% end %>
+
+<!-- Don't allow privacy to be true when emailing everyone -->
+<script>
+  function toggleCheckboxesDisabled($element) {
+    if ($element.attr('disabled')) {
+      $element.removeAttr("disabled");
+    } else {
+      $element.attr("disabled", true);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    $("#topic_make_private").click(function(e) {
+      toggleCheckboxesDisabled($("#topic_email_all_messageboard_members"))
+    });
+
+    $("#topic_email_all_messageboard_members").click(function(e) {
+      toggleCheckboxesDisabled($("#topic_make_private"))
+    });
+  }, false);
+</script>
