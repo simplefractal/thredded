@@ -23,7 +23,12 @@ module Thredded
       @topic                = find_record Topic, topic_id
       email_details        = TopicEmailView.new(@topic)
       headers['X-SMTPAPI'] = email_details.smtp_api_tag('post_notification')
-      emails = Thredded.user_class.thredded_messageboards_readers([@topic.messageboard]).pluck(:email)
+
+      # BCC all users who can see this board except for admin users
+      # The admins will see it because of the TO field
+      emails = Thredded.user_class.thredded_messageboards_readers(
+          [@topic.messageboard]
+        ).reject { |u| u.thredded_admin? }.map(&:email)
 
       mail from:     email_details.no_reply,
            to:       email_details.no_reply,

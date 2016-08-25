@@ -4,6 +4,8 @@ module Thredded
     include PostCommon
     include ContentModerationState
 
+    attr_accessor :skip_auto_follow_and_notify
+
     belongs_to :user,
                class_name: Thredded.user_class,
                inverse_of: :thredded_posts
@@ -64,6 +66,10 @@ module Thredded
 
     def auto_follow_and_notify
       return unless user
+
+      # Set this variable on this instance if you want to skip this
+      return if skip_auto_follow_and_notify
+
       # need to do this in-process so that it appears to them immediately
       UserTopicFollow.create_unless_exists(user.id, postable_id, :posted)
       # everything else can happen later

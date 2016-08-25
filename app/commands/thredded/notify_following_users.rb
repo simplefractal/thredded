@@ -6,6 +6,10 @@ module Thredded
     end
 
     def run
+      # Don't send a notification for the first post
+      # because we send that in the topic creator
+      return if @post.postable.posts.count == 1
+
       PostMailer.post_notification(@post.id, targeted_users.map(&:email)).deliver_now
       MembersMarkedNotified.new(@post, targeted_users).run
     end

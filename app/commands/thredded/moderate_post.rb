@@ -8,6 +8,7 @@ module Thredded
     # @param [Thredded.user_class] moderator
     # @return [Thredded::PostModerationRecord]
     def run!(post:, moderation_state:, moderator:)
+      post_moderation_record = nil
       Thredded::Post.transaction do
         post_moderation_record = Thredded::PostModerationRecord.record!(
           moderator: moderator,
@@ -18,17 +19,20 @@ module Thredded
 
         if post.postable.first_post == post
           update_without_timestamping!(post.postable, moderation_state: moderation_state)
+
           if moderation_state == :blocked
-            # When blocking the first post of a topic, also block all the other posts in the topic by this user.
             post.postable.posts.where(user_id: post.user.id).where.not(id: post.id).each do |a_post|
+              a.post.skip_auto_follow_and_notify = true
               update_without_timestamping!(a_post, moderation_state: moderation_state)
             end
           end
         end
+        post.skip_auto_follow_and_notify = true
         update_without_timestamping!(post, moderation_state: moderation_state)
         notify_poster_of_moderation_state(post)
         post_moderation_record
       end
+      post_moderation_record
     end
 
     # @param record [ActiveRecord]
