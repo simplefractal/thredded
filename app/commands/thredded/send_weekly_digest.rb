@@ -14,8 +14,17 @@ module Thredded
     private
 
     def users
-      # TODO allow them to unsubscribe from this
-      @users ||= Thredded.user_class.all
+      @users ||= begin
+        Thredded.user_class.includes(:thredded_user_preference).where(
+          'thredded_user_preferences.send_weekly_digest' => [true, nil]
+          ).all.reject do |user|
+            user.thredded_user_preference.received_last_weekly_digest_recently?(resend_safety_time)
+        end
+      end
+    end
+
+    def resend_safety_time
+      2.days.ago
     end
   end
 end

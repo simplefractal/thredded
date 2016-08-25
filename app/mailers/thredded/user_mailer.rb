@@ -10,6 +10,11 @@ module Thredded
       @messageboards = get_updated_messageboards
       email_details        = UserEmailView.new(@topic)
 
+      # Don't send an empty messageboard
+      return unless @messageboards.present?
+
+      @user.thredded_user_preference.update_attributes!(last_weekly_digest_sent_at: Time.zone.now
+      )
 
       mail from:     email_details.no_reply,
            to:       email_details.no_reply,
