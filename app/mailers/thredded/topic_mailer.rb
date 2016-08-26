@@ -24,7 +24,7 @@ module Thredded
       email_details        = TopicEmailView.new(@topic)
       headers['X-SMTPAPI'] = email_details.smtp_api_tag('post_notification')
 
-      # BCC all users who can see this board except for admin users
+      # send to all users who can see this board except for admin users
       # The admins will see it because of the TO field
       emails = Thredded.user_class.thredded_messageboards_readers(
           [@topic.messageboard]
@@ -34,7 +34,7 @@ module Thredded
            to:       email_details.no_reply,
            reply_to: email_details.reply_to,
            subject:  email_details.subject,
-           bcc:      emails
+           cc:       emails
     end
   end
 end
