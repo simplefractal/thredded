@@ -1,6 +1,6 @@
-"<%= @post.postable.title %>" has been made <%= @post.pretty_moderation_state %> in the <%= @post.messageboard.name %> discussion board.
+"<%= link_to @post.postable.title, messageboard_topic_url(@post.postable.messageboard, @post.postable) %>" has been made <%= @post.pretty_moderation_state %> in the <%= @post.messageboard.name %> discussion board:
 
-<blockquote><%= @post.filtered_content(self) %></blockquote>
+<p><%= @post.filtered_content(self) %></p>
 
 <hr />
 

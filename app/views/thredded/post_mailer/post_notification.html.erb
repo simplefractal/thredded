@@ -1,8 +1,8 @@
 <p>
-  A comment has been added to "<%= @post.postable.title %>" in the <%= @post.messageboard.name %> discussion board
+  A comment has been added to "<%= link_to @post.postable.title, messageboard_topic_url(@post.postable.messageboard, @post.postable) %>" in the <%= @post.messageboard.name %> discussion board:
 </p>
 
-<blockquote><%= @post.filtered_content(self) %></blockquote>
+<p><%= @post.filtered_content(self) %></p>
 
 <hr />
 

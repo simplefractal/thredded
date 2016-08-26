@@ -1,8 +1,8 @@
 <p>
-  "<%= @topic.title %>" has been created in the <%= @topic.messageboard.name %> discussion board:
+  "<%= link_to @topic.title, messageboard_topic_url(@topic.messageboard, @topic) %>" has been created in the <%= @topic.messageboard.name %> discussion board:
 </p>
 
-<blockquote><%= @topic.posts.first.filtered_content(self) %></blockquote>
+<p><%= @topic.posts.first.filtered_content(self) %></p>
 <hr />
 
 <p>
