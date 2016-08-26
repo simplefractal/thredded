@@ -10,8 +10,8 @@ module Thredded
       headers['X-SMTPAPI'] = email_details.smtp_api_tag('post_notification')
 
       mail from:     email_details.no_reply,
-           to:       email_details.no_reply,
-           cc:       emails,
+           to:       emails,
+           cc:       email_details.no_reply,
            reply_to: email_details.reply_to,
            subject:  email_details.subject
     end
@@ -24,8 +24,8 @@ module Thredded
       headers['X-SMTPAPI'] = email_details.smtp_api_tag('post_notification')
 
       mail from:     email_details.no_reply,
-           to:       email_details.no_reply,
-           cc:       @post.user.email,
+           to:       @post.user.email,
+           cc:       email_details.no_reply,
            reply_to: email_details.reply_to,
            subject:  email_details.subject
     end

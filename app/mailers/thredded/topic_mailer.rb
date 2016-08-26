@@ -31,10 +31,10 @@ module Thredded
         ).reject { |u| u.thredded_admin? }.map(&:email)
 
       mail from:     email_details.no_reply,
-           to:       email_details.no_reply,
+           cc:       email_details.no_reply,
            reply_to: email_details.reply_to,
            subject:  email_details.subject,
-           cc:       emails
+           to:       emails
     end
   end
 end
