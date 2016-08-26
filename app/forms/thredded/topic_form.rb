@@ -57,7 +57,8 @@ module Thredded
         user: non_null_user,
         last_user: non_null_user,
         categories: topic_categories,
-        moderation_state: topic_moderation_state
+        moderation_state: topic_moderation_state,
+        email_all_messageboard_members: email_all_messageboard_members
       )
     end
 

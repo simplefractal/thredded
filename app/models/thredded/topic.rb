@@ -5,10 +5,6 @@ module Thredded
     include TopicCommon
     include ContentModerationState
 
-    # attribute used when admins create a topic, to email
-    # all messageboard members.
-    attr_accessor :email_all_messageboard_members
-
     # attribute used when admins create a topic, allow allow topic to be private
     attr_accessor :make_private
 

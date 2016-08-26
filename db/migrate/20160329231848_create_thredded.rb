@@ -121,6 +121,8 @@ class CreateThredded < ActiveRecord::Migration
       t.string :type, limit: 191
       t.integer :moderation_state, null: false
       t.timestamps null: false
+      t.boolean :email_all_messageboard_members,default: false, null: false
+
       t.index %i(moderation_state sticky updated_at),
               order: { sticky: :desc, updated_at: :desc },
               name:  :index_thredded_topics_for_display
