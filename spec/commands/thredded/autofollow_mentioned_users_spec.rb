@@ -7,7 +7,7 @@ module Thredded
       @sam = create(:user, name: 'sam')
       @joel = create(:user, name: 'joel', email: 'joel@example.com')
       @john = create(:user, name: 'john', email: 'john@example.com')
-      @post = build(:post, user: @sam, content: 'hey @joel and @john. - @sam')
+      @post = build(:post, user: @sam, content: 'hey @[joel]() and @[john](). - @[sam]()')
       @messageboard = @post.messageboard
     end
 
@@ -55,7 +55,7 @@ module Thredded
 
     def build_post_by(user)
       messageboard = create(:messageboard)
-      build(:post, user: user, content: 'hi @john', messageboard: messageboard)
+      build(:post, user: user, content: 'hi @[john](1)', messageboard: messageboard)
     end
   end
 end
