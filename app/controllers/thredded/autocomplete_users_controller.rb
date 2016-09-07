@@ -4,9 +4,15 @@ module Thredded
     MIN_QUERY_LENGTH = 2
     MAX_RESULTS      = 20
 
+    # pass in messageboard_id to return a list of all
+    # users that can be tagged in a messageboard post.
     def index
-      authorize_creating PrivateTopicForm.new(user: thredded_current_user).private_topic
-      users = params.key?(:q) ? users_by_prefix : users_by_ids
+      if params[:messageboard_id].present?
+        users = Thredded.user_class.thredded_messageboards_readers([Messageboard.friendly.find(params[:messageboard_id])]).all
+      else
+        authorize_creating PrivateTopicForm.new(user: thredded_current_user).private_topic
+        users = params.key?(:q) ? users_by_prefix : users_by_ids
+      end
       render json: {
         results: users.map do |user|
           { id:         user.id,

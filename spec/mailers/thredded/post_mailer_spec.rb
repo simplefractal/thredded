@@ -5,8 +5,8 @@ module Thredded
   describe PostMailer, 'post_notification' do
     it 'sets the correct headers' do
       expect(email.from).to eq(['no-reply@example.com'])
-      expect(email.to).to eq(['no-reply@example.com'])
-      expect(email.cc).to eq(%w(john@email.com sam@email.com))
+      expect(email.cc).to eq(['no-reply@example.com'])
+      expect(email.to).to eq(%w(john@email.com sam@email.com))
       expect(email.reply_to).to eq(['abcd@incoming.example.com'])
       expect(email.subject).to eq('[Thredded] A title')
     end
