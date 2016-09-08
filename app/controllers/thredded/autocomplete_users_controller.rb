@@ -8,7 +8,10 @@ module Thredded
     # users that can be tagged in a messageboard post.
     def index
       if params[:messageboard_id].present?
-        users = Thredded.user_class.thredded_messageboards_readers([Messageboard.friendly.find(params[:messageboard_id])]).all
+        messageboard = Messageboard.friendly.find(params[:messageboard_id])
+        users = Rails.cache.fetch("autocomplete-users/#{messageboard.id}/#{Role.count}", expires_in: 1.day) do
+          Thredded.user_class.thredded_messageboards_readers([messageboard]).all
+        end
       else
         authorize_creating PrivateTopicForm.new(user: thredded_current_user).private_topic
         users = params.key?(:q) ? users_by_prefix : users_by_ids
