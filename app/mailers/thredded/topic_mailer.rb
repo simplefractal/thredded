@@ -2,15 +2,15 @@
 require_dependency 'thredded/topic_email_view'
 module Thredded
   class TopicMailer < Thredded::BaseMailer
-    def topic_created(topic_id)
+    def topic_created(topic_id, emails)
       return if ENV['DISABLE_THREDDED_EMAILS']
 
       @topic                = find_record Topic, topic_id
       email_details        = TopicEmailView.new(@topic)
       headers['X-SMTPAPI'] = email_details.smtp_api_tag('post_notification')
-
       mail from:     email_details.no_reply,
-           to:       email_details.no_reply,
+           to:       emails,
+           cc:       email_details.no_reply,
            reply_to: email_details.reply_to,
            subject:  email_details.subject
     end

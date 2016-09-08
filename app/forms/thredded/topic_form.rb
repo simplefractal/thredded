@@ -44,7 +44,7 @@ module Thredded
       if email_all_messageboard_members && user.thredded_admin?
         email_all_messageboard_members_of_new_topic
       else
-        email_admins_of_new_topic
+        email_followers_about_new_topic
       end
       true
     end
@@ -66,7 +66,8 @@ module Thredded
       @post ||= topic.posts.build(
         content: content,
         user: non_null_user,
-        messageboard: messageboard
+        messageboard: messageboard,
+        moderation_state: topic_moderation_state
       )
     end
 
@@ -82,8 +83,17 @@ module Thredded
       end
     end
 
-    def email_admins_of_new_topic
-      TopicMailer.topic_created(topic.id).deliver_now
+    def email_followers_about_new_topic
+      to_emails = if topic.approved?
+        topic.following_users.reject { |u| u == @topic.user }.map(&:email)
+      else
+        topic.following_users
+          .reject { |u| u == @topic.user }
+          .select { |u| u.thredded_admin? }
+          .map(&:email)
+      end
+
+      TopicMailer.topic_created(topic.id, to_emails).deliver_now
     end
 
     def email_all_messageboard_members_of_new_topic

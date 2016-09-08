@@ -48,7 +48,7 @@ module Thredded
     end
 
     def notify_poster_of_moderation_state(post)
-      PostMailer.post_moderated(post.id).deliver_now
+      PostMailer.post_moderated(post.id, post.postable.following_users.map(&:email)).deliver_now
     end
   end
 end
