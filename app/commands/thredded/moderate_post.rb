@@ -29,7 +29,11 @@ module Thredded
         end
         post.skip_auto_follow_and_notify = true
         update_without_timestamping!(post, moderation_state: moderation_state)
-        notify_poster_of_moderation_state(post)
+
+        if notify_poster_of_moderation_state?(post_moderation_record)
+          notify_poster_of_moderation_state(post)
+        end
+
         post_moderation_record
       end
       post_moderation_record
@@ -49,6 +53,14 @@ module Thredded
 
     def notify_poster_of_moderation_state(post)
       PostMailer.post_moderated(post.id, users_to_email(post)).deliver_now
+    end
+
+    def notify_poster_of_moderation_state?(post_moderation_record)
+      record =  post_moderation_record
+      was_pending = record.previous_moderation_state == 0  # Rails 4 can't enum prefix :(
+      is_blocked = record.blocked?
+
+      !(was_pending && is_blocked)
     end
 
     def users_to_email(post)
