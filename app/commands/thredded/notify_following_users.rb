@@ -15,7 +15,7 @@ module Thredded
     end
 
     def targeted_users
-      @targeted_users ||= @post.postable.following_users.reject { |u| u == @post.user }
+      @targeted_users ||= @post.postable.following_users.reject { |u| (u == @post.user) || u.thredded_admin? }
     end
   end
 end

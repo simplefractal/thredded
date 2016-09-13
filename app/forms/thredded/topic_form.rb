@@ -84,14 +84,10 @@ module Thredded
     end
 
     def email_followers_about_new_topic
-      to_emails = if topic.approved?
-        topic.following_users.reject { |u| u == @topic.user }.map(&:email)
-      else
-        topic.following_users
+      to_emails = topic.following_users
           .reject { |u| u == @topic.user }
-          .select { |u| u.thredded_admin? }
+          .reject { |u| u.thredded_admin? }
           .map(&:email)
-      end
 
       TopicMailer.topic_created(topic.id, to_emails).deliver_now
     end
