@@ -9,13 +9,17 @@
       <%= form.check_box :sticky %> Sticky
     <% end %>
 
-    <%= form.label :make_private do %>
-      <%= form.check_box :make_private %> Private
-    <% end %>
+    <% if topic.new_record? %>
 
-    <%= form.label :email_all_messageboard_members do %>
-      <%= form.check_box :email_all_messageboard_members %>
-      E-mail all researchers on this project now
+      <%= form.label :make_private do %>
+        <%= form.check_box :make_private %> Private
+      <% end %>
+
+      <%= form.label :email_all_messageboard_members do %>
+        <%= form.check_box :email_all_messageboard_members %>
+        E-mail all researchers on this project now
+      <% end %>
+
     <% end %>
   </li>
 <% end %>
