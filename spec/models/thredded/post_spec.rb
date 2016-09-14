@@ -12,6 +12,19 @@ module Thredded
     end
   end
 
+  describe ".content_with_links_stripped" do
+    subject { post.content_with_links_stripped }
+    let(:post) { build_stubbed(:post, content: content) }
+    let(:content) { "Hi @[username](link)"}
+
+    it { should eq("Hi @username")}
+
+    context "with 2 links" do
+      let(:content) { "Hi @[username](link) @[username](nk)."}
+      it { should eq("Hi @username @username.")}
+    end
+  end
+
   describe Post, '#create' do
     xit 'notifies anyone @ mentioned in the post' do
       mail = double('Thredded::PostMailer.post_notification(...)', deliver_now: true)

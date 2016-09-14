@@ -14,7 +14,7 @@ Here's a summary of what's changed on WCAI's discussion boards in the last <%= @
 
         <ul>
           <% topic.posts.where("created_at > ?", @digest_period_cutoff).each do |post| %>
-            <li><%= post.user.name %>: <%= truncate(post.content, length:40) %></li>
+            <li><%= post.user.name %>: <%= truncate(post.content_with_links_stripped, length:40) %></li>
           <% end %>
         </ul>
       <% end %>
@@ -33,7 +33,7 @@ Here's a summary of what's changed on WCAI's discussion boards in the last <%= @
 
         <ul>
           <% topic.posts.where("created_at > ?", @digest_period_cutoff).each do |post| %>
-            <li><%= post.user.name %>: <%= truncate(post.content, length:40) %></li>
+            <li><%= post.user.name %>: <%= truncate(post.content_with_links_stripped, length:40) %></li>
           <% end %>
         </ul>
       <% end %>
