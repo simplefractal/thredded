@@ -2,8 +2,7 @@
 module Thredded
   # A view model for Topic.
   class TopicView < BaseTopicView
-    delegate :categories, :id, :blocked?, :last_moderation_record,
-             :last_post,
+    delegate :sticky?, :categories, :id, :blocked?, :last_moderation_record, :posts, :last_post, :pending_moderation?, :email_all_messageboard_members,
              to: :@topic
 
     # @param topic [TopicCommon]

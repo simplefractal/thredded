@@ -4,6 +4,8 @@ module Thredded
     include PostCommon
     include ContentModerationState
 
+    attr_accessor :skip_auto_follow_and_notify
+
     belongs_to :user,
                class_name: Thredded.user_class,
                inverse_of: :thredded_posts
@@ -40,10 +42,6 @@ module Thredded
       false
     end
 
-    def user_detail
-      super || build_user_detail
-    end
-
     # @return [ActiveRecord::Relation<Thredded.user_class>] users from the list of user names that can read this post.
     def readers_from_user_names(user_names)
       DbTextSearch::CaseInsensitive
@@ -53,8 +51,25 @@ module Thredded
 
     private
 
+    # Override set_default_moderation_state
+    # Allow non-admins to create posts whose posts
+    # depend on the topic's moderation state
+    def set_default_moderation_state
+      if user.present? && user.thredded_admin?
+        super
+      elsif postable.present?
+        self.moderation_state ||= postable.moderation_state
+      else
+        super
+      end
+    end
+
     def auto_follow_and_notify
       return unless user
+
+      # Set this variable on this instance if you want to skip this
+      return if skip_auto_follow_and_notify
+
       # need to do this in-process so that it appears to them immediately
       UserTopicFollow.create_unless_exists(user.id, postable_id, :posted)
       # everything else can happen later

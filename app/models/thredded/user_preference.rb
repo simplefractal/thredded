@@ -8,5 +8,9 @@ module Thredded
              foreign_key: :user_id,
              inverse_of: :user_preference
     validates :user_id, presence: true
+
+    def received_last_weekly_digest_recently?(resend_safety_time)
+      last_weekly_digest_sent_at.present? && (last_weekly_digest_sent_at > resend_safety_time)
+    end
   end
 end

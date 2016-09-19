@@ -8,6 +8,14 @@ module Thredded
     included do
       enum moderation_state: %i(pending_moderation approved blocked)
       validates :moderation_state, presence: true
+
+      def pretty_moderation_state
+        if moderation_state == 'approved'
+          'public'
+        else
+          'private'
+        end
+      end
     end
   end
 end

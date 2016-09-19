@@ -5,13 +5,13 @@ module Thredded
   describe ModeratePost, '.run!' do
     let(:moderator) { create(:user) }
 
-    it "'moderating a post from a pending user changes the user's moderation state" do
+    it "'moderating a post from a pending regular user does not changesthe user's moderation state" do
       user = create(:user)
       post = create(:post, user: user)
       Thredded::ModeratePost.run!(post: post, moderation_state: :approved, moderator: moderator)
       expect(post).to be_approved
       user.thredded_user_detail.reload
-      expect(user.thredded_user_detail).to be_approved
+      expect(user.thredded_user_detail).to be_pending_moderation
     end
 
     it "moderating first post of a topic changes the topic's moderation_state" do

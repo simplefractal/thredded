@@ -3,7 +3,7 @@ module Thredded
   class TopicForm
     include ActiveModel::Model
 
-    attr_accessor :title, :category_ids, :locked, :sticky, :content, :topic
+    attr_accessor :title, :category_ids, :locked, :sticky, :content, :topic, :email_all_messageboard_members, :make_private
     attr_reader :user, :messageboard
 
     validate :validate_children
@@ -16,6 +16,8 @@ module Thredded
       @content = params[:content]
       @user = params[:user] || fail('user is required')
       @messageboard = params[:messageboard]
+      @email_all_messageboard_members = (params[:email_all_messageboard_members] == "1")
+      @make_private = (params[:make_private] == "1")
     end
 
     def self.model_name
@@ -38,6 +40,12 @@ module Thredded
         post.save!
         UserTopicReadState.read_on_first_post!(user, topic) if topic.previous_changes.include?(:id)
       end
+
+      if email_all_messageboard_members && user.thredded_admin?
+        email_all_messageboard_members_of_new_topic
+      else
+        email_followers_about_new_topic
+      end
       true
     end
 
@@ -49,6 +57,8 @@ module Thredded
         user: non_null_user,
         last_user: non_null_user,
         categories: topic_categories,
+        moderation_state: topic_moderation_state,
+        email_all_messageboard_members: email_all_messageboard_members
       )
     end
 
@@ -56,11 +66,35 @@ module Thredded
       @post ||= topic.posts.build(
         content: content,
         user: non_null_user,
-        messageboard: messageboard
+        messageboard: messageboard,
+        moderation_state: topic_moderation_state
       )
     end
 
     private
+
+    def topic_moderation_state
+      if make_private && user.thredded_admin?
+        :blocked
+      elsif user.thredded_admin?
+        :approved
+      else
+        :pending_moderation
+      end
+    end
+
+    def email_followers_about_new_topic
+      to_emails = topic.following_users
+          .reject { |u| u == @topic.user }
+          .reject { |u| u.thredded_admin? }
+          .map(&:email)
+
+      TopicMailer.topic_created(topic.id, to_emails).deliver_now
+    end
+
+    def email_all_messageboard_members_of_new_topic
+      TopicMailer.topic_created_broadcast(topic.id).deliver_now
+    end
 
     # @return [Thredded.user_class, nil] return a user or nil if the user is a NullUser
     # This is necessary because assigning a NullUser to an ActiveRecord association results in an exception.

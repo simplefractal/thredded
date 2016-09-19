@@ -54,6 +54,16 @@ module Thredded
     scope :top_level_messageboards, -> { where(group: nil) }
     scope :by_messageboard_group, ->(group) { where(group: group.id) }
 
+    def topics_count_visible_to_user(user)
+      return topics_count if user.thredded_admin?
+      Thredded::TopicPolicy::Scope.new(user, topics).resolve.count
+    end
+
+    def posts_count_visible_to_user(user)
+      return posts_count if user.thredded_admin?
+      Thredded::PostPolicy::Scope.new(user, posts).resolve.count
+    end
+
     def last_user
       last_topic.try(:last_user)
     end

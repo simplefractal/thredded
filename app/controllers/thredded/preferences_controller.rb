@@ -26,6 +26,7 @@ module Thredded
           :notify_on_mention,
           :notify_on_message,
           :messageboard_notify_on_mention,
+          :send_weekly_digest,
         )
       )
     end

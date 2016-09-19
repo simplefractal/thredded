@@ -1,0 +1,12 @@
+<p>
+  "<%= link_to @topic.title, messageboard_topic_url(@topic.messageboard, @topic) %>" has been created in the <%= @topic.messageboard.name %> discussion board:
+</p>
+
+<p><%= @topic.posts.first.filtered_content(self) %></p>
+<hr />
+
+
+<p>
+  View the conversation <%= link_to 'here', topic_url(@topic) %>.
+  <%= link_to 'Click here', edit_global_preferences_url %> to update your preferences.
+</p>

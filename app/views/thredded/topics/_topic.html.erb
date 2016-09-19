@@ -1,7 +1,19 @@
 <%= content_tag :article,
                 id:    dom_id(topic),
                 class: ['thredded--topics--topic', topic_css_classes(topic)] do %>
-  <div class="thredded--topics--posts-count"><%= topic.posts_count %></div>
+
+
+  <% if topic.sticky? %>
+    <span title="Sticky - put at top of list"
+      <%= fa_icon "thumb-tack" %>
+    </span>
+  <% end %>
+
+  <% if thredded_current_user.thredded_admin? && topic.email_all_messageboard_members %>
+    <span title="All researchers in this project have been emailed a link to this"
+      <%= fa_icon "bullhorn" %>
+    </span>
+  <% end %>
 
   <h1 class="thredded--topics--title">
     <%= link_to topic.title, topic.path %>
@@ -15,17 +27,30 @@
 
   <cite class="thredded--topics--updated-by">
     <%= time_ago topic.updated_at %>
+    by
     <%= user_link topic.last_user %>
   </cite>
 
   <cite class="thredded--topics--started-by">
     <%= time_ago topic.created_at %>
+    by
     <%= user_link topic.user %>
   </cite>
 
-  <% if topic.blocked? && topic.can_moderate? %>
+  <cite class="thredded--topics--posts-count-after"> |
+    &nbsp;
+    <%= pluralize(topic.posts_count, 'post') %>
+  </cite>
+
+  <% if topic.blocked? %>
     <span class="thredded--topics--moderation-state thredded--alert thredded--alert-danger">
       <%= render 'thredded/shared/content_moderation_blocked_state', moderation_record: topic.last_moderation_record %>
+    </span>
+  <% end %>
+
+  <% if topic.pending_moderation? %>
+    <span class="thredded--topics--moderation-state thredded--alert thredded--alert-danger">
+      Private
     </span>
   <% end %>
 <% end %>

@@ -1,0 +1,11 @@
+"<%= link_to @post.postable.title, messageboard_topic_url(@post.postable.messageboard, @post.postable) %>" has been made <%= @post.pretty_moderation_state %> in the <%= @post.messageboard.name %> discussion board:
+
+<p><%= @post.filtered_content(self) %></p>
+
+<hr />
+
+<p>
+  View the conversation <%= link_to 'here', post_permalink_url(@post.id) %>.
+
+  <%= link_to 'Click here', edit_messageboard_preferences_url(@post.messageboard) %> to update your preferences.
+</p>

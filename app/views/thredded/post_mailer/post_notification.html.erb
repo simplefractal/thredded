@@ -1,14 +1,13 @@
-<blockquote><%= @post.filtered_content(self) %></blockquote>
+<p>
+  A comment has been added to "<%= link_to @post.postable.title, messageboard_topic_url(@post.postable.messageboard, @post.postable) %>" in the <%= @post.messageboard.name %> discussion board:
+</p>
+
+<p><%= @post.filtered_content(self) %></p>
 
 <hr />
 
 <p>
-  This email was sent to you because you are following this topic
-  "<%= link_to @post.postable.title, post_permalink_url(@post.id) %>".
-  <%= link_to 'View the conversation here', topic_url(@post.postable) %>.
-</p>
+  View the conversation <%= link_to 'here', post_permalink_url(@post) %>.
 
-<p>
-  To unsubscribe from these emails, update your
-  <%= link_to 'preferences', edit_messageboard_preferences_url(@post.messageboard) %>.
+  <%= link_to 'Click here', edit_messageboard_preferences_url(@post.messageboard) %> to update your preferences.
 </p>

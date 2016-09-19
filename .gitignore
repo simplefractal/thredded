@@ -16,3 +16,7 @@ spec/dummy/db/schema.rb
 tags
 zeus.json
 custom_plan.rb
+
+vendor/bundle
+
+.byebug_history

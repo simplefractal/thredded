@@ -5,6 +5,9 @@ module Thredded
     include TopicCommon
     include ContentModerationState
 
+    # attribute used when admins create a topic, allow allow topic to be private
+    attr_accessor :make_private
+
     scope :for_messageboard, -> (messageboard) { where(messageboard_id: messageboard.id) }
 
     scope :stuck, -> { where(sticky: true) }

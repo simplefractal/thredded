@@ -25,6 +25,10 @@ module Thredded
       1 + postable_posts.where(postable_posts.arel_table[:created_at].lt(created_at)).count / per_page
     end
 
+    def content_with_links_stripped
+      content.gsub(/@\[(.*?)\]\((.*?)\)/, '@\1')
+    end
+
     # @param view_context [Object] the context of the rendering view.
     # @return [String] formatted and sanitized html-safe post content.
     def filtered_content(view_context, users_provider: -> (names) { readers_from_user_names(names) })

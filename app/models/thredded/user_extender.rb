@@ -8,6 +8,7 @@ module Thredded
     include ::Thredded::UserPermissions::Message::ReadersOfWriteableBoards
     include ::Thredded::UserPermissions::Moderate::IfModeratorColumnTrue
     include ::Thredded::UserPermissions::Admin::IfAdminColumnTrue
+    include ::Thredded::UserPermissions::Emails::WeeklyDigest
 
     included do
       with_options dependent: :nullify, foreign_key: 'user_id', inverse_of: :user do |opt|
@@ -48,6 +49,10 @@ module Thredded
         joins(users.join(user_details, Arel::Nodes::OuterJoin)
                 .on(users[:id].eq(user_details[:user_id])).join_sources)
       end)
+    end
+
+    def first_name
+      (send(Thredded.user_name_column) || "").split(" ").first
     end
 
     def thredded_user_preference

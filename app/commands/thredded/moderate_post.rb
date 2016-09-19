@@ -8,6 +8,7 @@ module Thredded
     # @param [Thredded.user_class] moderator
     # @return [Thredded::PostModerationRecord]
     def run!(post:, moderation_state:, moderator:)
+      post_moderation_record = nil
       Thredded::Post.transaction do
         post_moderation_record = Thredded::PostModerationRecord.record!(
           moderator: moderator,
@@ -15,21 +16,27 @@ module Thredded
           previous_moderation_state: post.moderation_state,
           moderation_state: moderation_state,
         )
-        if post.user_id && post.user_detail.pending_moderation?
-          update_without_timestamping!(post.user_detail, moderation_state: moderation_state)
-        end
+
         if post.postable.first_post == post
           update_without_timestamping!(post.postable, moderation_state: moderation_state)
+
           if moderation_state == :blocked
-            # When blocking the first post of a topic, also block all the other posts in the topic by this user.
             post.postable.posts.where(user_id: post.user.id).where.not(id: post.id).each do |a_post|
+              a_post.skip_auto_follow_and_notify = true
               update_without_timestamping!(a_post, moderation_state: moderation_state)
             end
           end
         end
+        post.skip_auto_follow_and_notify = true
         update_without_timestamping!(post, moderation_state: moderation_state)
+
+        if notify_poster_of_moderation_state?(post_moderation_record)
+          notify_poster_of_moderation_state(post)
+        end
+
         post_moderation_record
       end
+      post_moderation_record
     end
 
     # @param record [ActiveRecord]
@@ -42,6 +49,22 @@ module Thredded
       ensure
         record.record_timestamps = record_timestamps_was
       end
+    end
+
+    def notify_poster_of_moderation_state(post)
+      PostMailer.post_moderated(post.id, users_to_email(post)).deliver_now
+    end
+
+    def notify_poster_of_moderation_state?(post_moderation_record)
+      record =  post_moderation_record
+      was_pending = record.previous_moderation_state == 0  # Rails 4 can't enum prefix :(
+      is_blocked = record.blocked?
+
+      !(was_pending && is_blocked)
+    end
+
+    def users_to_email(post)
+      post.postable.following_users.reject { |u| u.thredded_admin? }.map(&:email)
     end
   end
 end

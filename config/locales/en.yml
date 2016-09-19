@@ -10,30 +10,30 @@ en:
     form:
       update: Update
     content_moderation_states:
-      content_blocked_notice: Blocked
-      content_blocked_notice_with_record_html: Blocked by %{moderator} %{time_ago}
+      content_blocked_notice: Private
+      content_blocked_notice_with_record_html: Made Private by %{moderator} %{time_ago}
     messageboard:
-      create: Create a New Messageboard
+      create: Create a New Discussion Board
       form:
         no_group: No Group
       index:
-        page_title: Messageboards
+        page_title: Discussion Boards
       last_updated_by_html: Updated %{time_ago} <cite>by %{user}</cite>
       topics_and_posts_counts: "%{topics_count} topics / %{posts_count} posts"
       update: :thredded.form.update
-      updated_notice: Messageboard has been updated
+      updated_notice: Discussion Board has been updated
     messageboard_group:
-      create: Create a New Messageboard Group
-      created_notice: Messageboard group has been created
+      create: Create a New Discussion Board Group
+      created_notice: Discussion Board group has been created
     moderation:
       approve_btn: Approve
-      block_btn: Block
+      block_btn: Make Private
       pending:
         empty:
           content: All posts have been moderated.
           title: Good job!
       post_approved_html: Post approved by %{moderator} %{time_ago}.
-      post_blocked_html: Post blocked by %{moderator} %{time_ago}.
+      post_blocked_html: Post made private by %{moderator} %{time_ago}.
       post_deleted_notice: This post has been deleted.
       posts_content_changed_since_moderation_html: >-
         The <a href="%{post_url}">post's</a> content change since it was moderated. Below is the content at the
@@ -44,8 +44,8 @@ en:
         results_message: Users with names starting with %{query}
         no_results_message: No users with name starting with %{query}
     nav:
-      all_messageboards: All Messageboards
-      edit_messageboard: Edit Messageboard
+      all_messageboards: All Discussion Boards
+      edit_messageboard: Edit Discussion Board
       edit_post: Edit Post
       edit_private_topic: :thredded.nav.edit_topic
       edit_topic: Edit
@@ -75,13 +75,13 @@ en:
         global_preferences_label: Global Settings
         messageboard_notify_on_mention:
           hint: >-
-            When someone mentions you by your username (eg: @sam) in this messageboard you will follow the topic.
+            When someone mentions you by your email (eg:  sam@gmail.com) in this discussion board you will follow the topic.
             You will receive emails with the contents of that post and any replies.
           label: :thredded.preferences.form.notify_on_mention.label
         messageboard_preferences_label_html: Notification Settings for <em>%{messageboard}</em>
         notify_on_mention:
           hint: >-
-            When someone mentions you by your username (eg: @sam) you will follow the topic. You will receive emails
+            When someone mentions you by your email (eg: sam@gmail.com) you will follow the topic. You will receive emails
             with the contents of that post and any replies.
           label: Follow topics you are mentioned in
         notify_on_message:
