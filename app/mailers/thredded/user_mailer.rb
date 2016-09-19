@@ -41,7 +41,7 @@ module Thredded
       visible_topics = Thredded::TopicPolicy::Scope.new(@user, messageboard.topics).resolve
       visible_topics.select do |topic|
         (topic.created_at > digest_period_cutoff) ||
-          topic.posts.where("created_at > ?", digest_period_cutoff)
+          topic.posts.where("created_at > ?", digest_period_cutoff).exists?
       end
     end
 

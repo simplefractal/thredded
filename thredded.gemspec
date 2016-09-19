@@ -35,6 +35,7 @@ Thredded works with SQLite, MySQL (v5.6.4+), and PostgreSQL. See the demo at htt
   s.add_dependency 'rails', '>= 4.2.0'
   s.add_dependency 'rb-gravatar'
   s.add_dependency 'inline_svg'
+  s.add_dependency 'rollbar'
 
   # html-pipeline dependencies, see https://github.com/jch/html-pipeline#dependencies
   s.add_dependency 'gemoji'
@@ -49,6 +50,7 @@ Thredded works with SQLite, MySQL (v5.6.4+), and PostgreSQL. See the demo at htt
   s.add_dependency 'autosize-rails'
   s.add_dependency 'sprockets-es6'
   s.add_dependency 'jquery-rails'
+  s.add_dependency 'font-awesome-rails'
 
   # test dependencies
   s.add_development_dependency 'capybara', '~> 2.4'

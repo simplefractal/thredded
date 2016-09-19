@@ -51,6 +51,10 @@ module Thredded
       end)
     end
 
+    def first_name
+      (send(Thredded.user_name_column) || "").split(" ").first
+    end
+
     def thredded_user_preference
       super || build_thredded_user_preference
     end

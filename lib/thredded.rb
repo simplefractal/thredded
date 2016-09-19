@@ -21,8 +21,10 @@ require 'jquery/rails'
 require 'rails-timeago'
 require 'select2-rails'
 require 'sprockets/es6'
+require 'font-awesome-rails'
 
 require 'thredded/engine'
+require 'rollbar'
 
 module Thredded
   mattr_accessor \
@@ -34,6 +36,7 @@ module Thredded
     :email_reply_to,
     :layout,
     :user_class,
+    :error_reporter,
     :user_name_column,
     :user_path
 
@@ -58,7 +61,10 @@ module Thredded
   self.user_name_column = :name
   self.content_visible_while_pending_moderation = true
 
+  # Allow this to be overwritten
   def self.error_reporter
+    return @@error_reporter if @@error_reporter
+
     Rollbar
   end
 
@@ -103,3 +109,4 @@ module Thredded
     )
   end
 end
+

@@ -75,13 +75,13 @@ en:
         global_preferences_label: Global Settings
         messageboard_notify_on_mention:
           hint: >-
-            When someone mentions you by your username (eg:  sam@gmail.com) in this discussion board you will follow the topic.
+            When someone mentions you by your email (eg:  sam@gmail.com) in this discussion board you will follow the topic.
             You will receive emails with the contents of that post and any replies.
           label: :thredded.preferences.form.notify_on_mention.label
         messageboard_preferences_label_html: Notification Settings for <em>%{messageboard}</em>
         notify_on_mention:
           hint: >-
-            When someone mentions you by your username (eg: sam@gmail.com) you will follow the topic. You will receive emails
+            When someone mentions you by your email (eg: sam@gmail.com) you will follow the topic. You will receive emails
             with the contents of that post and any replies.
           label: Follow topics you are mentioned in
         notify_on_message:

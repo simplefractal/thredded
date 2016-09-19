@@ -9,7 +9,7 @@
     </span>
   <% end %>
 
-  <% if current_user.thredded_admin? && topic.email_all_messageboard_members %>
+  <% if thredded_current_user.thredded_admin? && topic.email_all_messageboard_members %>
     <span title="All researchers in this project have been emailed a link to this"
       <%= fa_icon "bullhorn" %>
     </span>
